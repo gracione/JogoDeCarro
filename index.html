@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="refresh" content="220.2">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+	<style>
+		#caixa{
+			position: absolute;
+			left: 0px;
+			width: 30px;
+			height: 60px;
+			position: absolute;
+			top: 200px;
+		}
+		.obstaculo{
+			position: absolute;
+			width: 30px;
+			height: 60px;
+		}
+		#fimDeJogo{
+			position: absolute;
+			display: none;
+			position: absolute;
+			margin-top: 70px;
+			margin-left: 10px;
+			font-size: 40px;
+		}
+		#iniciar button{
+			position: absolute;
+			background-color: seagreen;
+			border-radius: 100%;
+			width: 50px;
+			height: 70px;
+
+		}
+		#iniciar button:hover{
+			position: absolute;
+			background-color: green;
+		}
+		#faixa .faixa{
+			position: absolute;
+			width: 90px;
+			height: 10px;
+			align-content: center;
+			margin-top: 40px;
+		}
+		#campo{
+			border: solid;
+			position: absolute;
+			width: 100px;
+			height: 290px;
+			background-color:#A9A9A9;
+		}
+		#painel{
+			border:solid;
+			width: 100px;
+			height: 40px;
+			background-color: teal;
+			position: absolute;
+		}
+		#painelRodape{
+			margin-top: 270px;
+			border: solid;
+			width: 100px;
+			height: 60px;
+			background-color: teal;
+			position: absolute;
+		}
+	</style>
+
+<body>
+	<div>
+		<div id="campo">
+			<div id="faixa" >
+				<img class="faixa" height="100%" src="img/faixa.png" alt="">
+				<img class="faixa" src="img/faixa.png" alt="">
+				<img class="faixa" src="img/faixa.png" alt="">
+				<img class="faixa" src="img/faixa.png" alt="">
+				<img class="faixa" src="img/faixa.png" alt="">
+			</div>
+			<script>
+				let faixa=document.querySelectorAll(".faixa");
+			</script>
+			<img class="obstaculo" src="img/car2.png" alt="">
+			<img class="obstaculo" src="img/car2.png" alt="">
+			<img id="caixa" src="img/car1.png" alt="">
+			<div id="fimDeJogo" >Fim <br>de<br> Jogo</div>
+		</div>
+		<div id="painel">
+			<div id="iniciar">
+				<button onclick="iniciar()" >Iniciar</button>
+			</div>
+		</div>
+		<div id="painelRodape" >
+			<center>
+				<p style="color: white;" id="tempo">0</p>
+			</center>
+		</div>
+	</div>
+</body>
+<script>
+	let i=0;
+	let i2=50;	
+	let i3=100;	
+	let i4=150;	
+	let i5=200;
+	let contador=0;
+	let v1=0;
+	let v2=0;
+	let px=0;
+	let paraTempo;
+
+
+	let obstaculo = document.querySelectorAll(".obstaculo");
+	let inicia = document.getElementById("iniciar");
+	let fimDeJogo=document.getElementById("fimDeJogo");
+	let caixa=document.getElementById('caixa');
+
+	let aleatorio=new Function("min,max","return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min))) + Math.ceil(min)");
+
+	Obstaculo=()=>{
+		v1=aleatorio(0,3)*30;
+		v2=aleatorio(0,3)*30;
+		if(v1==v2) Obstaculo();
+	}
+	tempo=() => {
+		contador+=1
+		i+=10;
+		i2+=10;	
+		i3+=10;	
+		i4+=10;	
+		i5+=10;	
+		document.getElementById("tempo").innerHTML=contador;
+		
+		if(i<=260){
+			obstaculo[1].style.top=i+"px";
+			obstaculo[0].style.top=i+"px";	
+			faixa[0].style.top=i+"px";
+			faixa[1].style.top=i2+"px";		
+			faixa[2].style.top=i3+"px";		
+			faixa[3].style.top=i4+"px";		
+			faixa[4].style.top=i5+"px";	
+			
+		}
+		
+		if(i2>=270)i2=0;
+		if(i3>=270)i3=0;
+		if(i4>=270)i4=0;
+		if(i5>=270)i5=0;
+		if(i>=270){
+			Obstaculo();
+			i=0;
+			obstaculo[0].style.left=v1+"px";
+			obstaculo[1].style.left=v2+"px";
+		}
+
+
+		if(i==200){
+			if(v1==px || v2==px){
+				clearInterval(paraTempo);
+				inicia.style.display="inline";
+				fimDeJogo.style.display="inline";
+				caixa.src="img/car12.png";
+				obstaculo[0].style.display="none";
+				obstaculo[1].style.display="none";
+			}
+		}
+	}
+	
+	movimento=()=>{
+		document.addEventListener("keydown",function(event){
+			let obj=document.getElementById("caixa");
+			let tecla=event.keyCode;
+			
+			if(tecla==37){
+				if(px!=0) px-=30;
+				obj.style.left=px+"px";
+			}
+			else if(tecla==39){
+				if(px!=60) px+=30;
+				obj.style.left=px+"px";
+			}
+		})		
+	}
+	//principal
+	let audio = new Audio("sons/audio.mp3")
+	iniciar=()=>{
+		audio.pause();
+		audio.play();
+		contador=0;
+		inicia.style.display="none";
+		fimDeJogo.style.display="none";
+		caixa.src="img/car1.png";
+		obstaculo[0].style.display="inline";
+		obstaculo[1].style.display="inline";
+		paraTempo= setInterval(tempo, 50);
+	}
+	movimento();
+
+</script>
+</html>
